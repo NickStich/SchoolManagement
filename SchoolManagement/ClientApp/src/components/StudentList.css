@@ -1,0 +1,30 @@
+/* StudentList.css */
+
+.student-list-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .student-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .student-item {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .student-name {
+    font-weight: bold;
+  }
+  
+  .student-grade {
+    color: #555;
+  }
+  
