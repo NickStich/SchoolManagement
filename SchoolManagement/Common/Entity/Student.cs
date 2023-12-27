@@ -4,5 +4,5 @@ public class Student : Person
 {
     public int Grade { get; set; }
 
-    public IEnumerable<Course>? Courses { get; set; }
+    public ICollection<StudentSubject> StudentSubjects { get; set; }
 }

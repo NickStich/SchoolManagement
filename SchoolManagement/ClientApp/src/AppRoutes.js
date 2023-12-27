@@ -1,5 +1,5 @@
-import { AddStudentPage } from "./components/AddStudentPage.js";
-import { StudentList } from "./components/StudentList";
+import { AddStudentPage } from "./components/student/AddStudentPage.js";
+import { StudentList } from "./components/student/StudentList";
 import { Counter } from "./components/Counter";
 import { FetchData } from "./components/FetchData";
 import { Home } from "./components/Home";
@@ -24,7 +24,16 @@ const AppRoutes = [
     {
         path: '/students',
         element: <StudentList />
-    }
+    },
+
+    //{
+    //    path: '/teacher',
+    //    element: <AddTeacherPage />
+    //},
+    //{
+    //    path: '/teachers',
+    //    element: <TeacherList />
+    //}
 ];
 
 export default AppRoutes;

@@ -6,5 +6,4 @@ public class Teacher : Person
 
     public int SubjectId { get; set; }
 
-    public IEnumerable<Course> Courses { get; set; }
 }

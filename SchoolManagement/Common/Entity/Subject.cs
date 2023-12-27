@@ -10,9 +10,5 @@ public class Subject
 
     public string Name { get; set; }
 
-    public Profile Profile { get; set; }
-
-    public IEnumerable<Teacher> Teachers { get; set; }
-
-    public IEnumerable<Course> Courses { get; set; }
+    public ICollection<StudentSubject> StudentSubjects { get; set; }
 }

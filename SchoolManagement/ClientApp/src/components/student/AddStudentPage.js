@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './AddStudentPage.css'
 
-import {addStudent} from '../api';
+import {addStudent} from '../../api';
 
 export class AddStudentPage extends Component {
   constructor(props) {
@@ -13,6 +13,7 @@ export class AddStudentPage extends Component {
       firstName: '',
       lastName: '',
       grade: '',
+      id: '',
     };
   }
 
@@ -21,31 +22,14 @@ export class AddStudentPage extends Component {
     console.log(initialData);
     if (initialData) {
       this.setState({
-        formData: {
-          firstName: initialData.firstName || '',
-          lastName: initialData.lastName || '',
-          grade: initialData.grade || '',
-        },
+        firstName: initialData.firstName || '',
+        lastName: initialData.lastName || '',
+        grade: initialData.grade || '',
+        id: initialData.id || '',
       });
     }
   }
-
-  // handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   const { firstName, lastName, grade } = this.state;
-  //   const newStudent = {
-  //     firstName,
-  //     lastName,
-  //     grade,
-  //   };
-  //   addStudent(newStudent);
-  //   // Optionally, you can reset the form fields here
-  //   this.setState({
-  //     firstName: '',
-  //     lastName: '',
-  //     grade: '',
-  //   });
-  // };
+  
 
   handleChange = (e) => {
     const { name, value } = e.target;
@@ -56,27 +40,25 @@ export class AddStudentPage extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const { firstName, lastName, grade } = this.state;
+    const { firstName, lastName, grade, id } = this.state;
     const newStudent = {
       firstName,
       lastName,
       grade,
+      id
     };
-    addStudent(newStudent);
-    // Optionally, you can reset the form fields here
+    this.props.onSubmit(newStudent);
+    this.props.onClose();
     this.setState({
       firstName: '',
       lastName: '',
       grade: '',
+      id: '',
     });
   };
 
   render() {
-    const { firstName, lastName, grade } = this.props.initialData;
-
-    console.log(this.state);
-
-    console.log(this.props.initialData);
+    const { firstName, lastName, grade } = this.state;
 
     return (
       <form onSubmit={this.handleSubmit}>

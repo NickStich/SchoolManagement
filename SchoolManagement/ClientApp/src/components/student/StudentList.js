@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Modal from 'react-modal';
 import AddStudentPage from './AddStudentPage.js';
 import './StudentList.css';
-import { getStudents, addStudent, editStudent, deleteStudent } from '../api'
+import { getStudents, addStudent, editStudent, deleteStudent } from '../../api.js'
 
 Modal.setAppElement('#root');
 
@@ -42,15 +42,15 @@ export class StudentList extends Component {
     this.setState({ isModalOpen: false });
   };
 
-  handleAddStudent  = (e) => {
-    e.preventDefault();
-    const { firstName, lastName, grade } = this.state;
-    const newStudent = {
-      firstName,
-      lastName,
-      grade,
-    };
-    this.closeModal();
+  handleAddStudent  = (newStudent) => {
+    // e.preventDefault();
+    // const { firstName, lastName, grade } = this.state;
+    // const newStudent = {
+    //   firstName,
+    //   lastName,
+    //   grade,
+    // };
+    // this.closeModal();
 
     addStudent(newStudent);
     // Optionally, you can reset the form fields here
@@ -59,15 +59,16 @@ export class StudentList extends Component {
     //   lastName: '',
     //   grade: '',
     // });
-    console.log('this');
+    this.closeModal();
 
 
   };
 
   handleEditStudent = async (editedStudent) => {
     try {
+      console.log(editedStudent);
         await editStudent(editedStudent.id, editedStudent);
-        this.handleGetStudents(); // Refresh the student list after editing
+        // this.handleGetStudents(); // Refresh the student list after editing
         this.closeModal();
       } catch (error) {
         // Handle error, e.g., show an error message
@@ -114,6 +115,7 @@ export class StudentList extends Component {
       >
         <AddStudentPage
           onSubmit={selectedStudent ? this.handleEditStudent : this.handleAddStudent}
+          onClose={this.closeModal}
           initialData={selectedStudent}
         />
         <button onClick={this.closeModal}>Close</button>

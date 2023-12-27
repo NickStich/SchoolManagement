@@ -6,6 +6,8 @@ using SchoolManagement.Common.Entity;
 using SchoolManagement.DAL;
 using SchoolManagement.DAL.Interfaces;
 using SchoolManagement.DAL.Repositories;
+using SchoolManagement.Helpers;
+using SchoolManagement.Storage;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,9 @@ builder.Services.AddDbContext<SchoolDbContext>(option =>
 //builder.Services.AddScoped<ICrudRepository<Student>, StudentRepository>();
 builder.Services.AddScoped<StudentRepository>();
 builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<BlobStorageHelper>();
+
+builder.Services.ConfigureOptions<BlobStorageOptionsSetup>();
 
 builder.Services.AddControllersWithViews();
 

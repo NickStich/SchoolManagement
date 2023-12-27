@@ -47,7 +47,8 @@ public class StudentController : ControllerBase
             return BadRequest();
 
         await _studentService.UpdateStudent(id, student);
-        return NoContent();
+
+        return StatusCode(202, student);
     }
 
     [HttpDelete("{id}")]
