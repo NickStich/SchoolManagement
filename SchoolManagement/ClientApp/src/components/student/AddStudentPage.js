@@ -7,8 +7,6 @@ export class AddStudentPage extends Component {
   constructor(props) {
     super(props);
 
-    console.log(props);
-
     this.state = {
       firstName: '',
       lastName: '',
@@ -19,7 +17,6 @@ export class AddStudentPage extends Component {
 
   componentDidMount() {
     const { initialData } = this.props;
-    console.log(initialData);
     if (initialData) {
       this.setState({
         firstName: initialData.firstName || '',

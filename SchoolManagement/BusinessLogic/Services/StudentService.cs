@@ -2,6 +2,7 @@
 using SchoolManagement.Common.Entity;
 using SchoolManagement.DAL.Interfaces;
 using SchoolManagement.DAL.Repositories;
+using SchoolManagement.Storage;
 
 namespace SchoolManagement.BusinessLogic.Services;
 
@@ -9,9 +10,12 @@ public class StudentService : IStudentService
 {
     private readonly StudentRepository _studentRepository;
 
-    public StudentService(StudentRepository studentRepository)
+    private readonly BlobStorageHelper _blobStorageHelper;
+
+    public StudentService(StudentRepository studentRepository, BlobStorageHelper blobStorageHelper)
     {
         _studentRepository = studentRepository;
+        _blobStorageHelper = blobStorageHelper;
     }
 
     public async Task AddStudent(Student student)
@@ -72,5 +76,14 @@ public class StudentService : IStudentService
         {
             throw;
         }
+    }
+
+    public async Task UpdateUserProfilePicture(int studentId, IFormFile selectedProfilePicture)
+    {
+        var student = await _studentRepository.GetByIdAsync(studentId) ?? throw new Exception("Student not found.");
+
+        student.ProfilePictureFileName = await _blobStorageHelper.UploadFile(selectedProfilePicture);
+
+        await _studentRepository.UpdateAsync(student.Id, student);
     }
 }

@@ -57,4 +57,15 @@ public class StudentController : ControllerBase
         await _studentService.DeleteStudent(id);
         return NoContent();
     }
+
+    [HttpPut("uploadProfilePicture/{studentId}")]
+    public async Task<IActionResult> UploadProfilePicture(int studentId, [FromForm] IFormFile selectedProfilePicture)
+    {
+        if (selectedProfilePicture != null)
+        {
+            await _studentService.UpdateUserProfilePicture(studentId, selectedProfilePicture);
+        }
+
+        return new OkObjectResult("It worked");
+    }
 }

@@ -9,8 +9,12 @@ Modal.setAppElement('#root');
 export class StudentList extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       students: [],
+      isModalOpen: false,
+      selectedStudent: null,
+      expandedStudentId: null,
     };
   }
 
@@ -29,7 +33,7 @@ export class StudentList extends Component {
   }
 
   openModal = () => {
-    this.setState({ isModalOpen: true });
+    this.setState({ isModalOpen: true, selectedStudent: null });
   };
 
   openEditModal = (student) => {
@@ -43,35 +47,15 @@ export class StudentList extends Component {
   };
 
   handleAddStudent  = (newStudent) => {
-    // e.preventDefault();
-    // const { firstName, lastName, grade } = this.state;
-    // const newStudent = {
-    //   firstName,
-    //   lastName,
-    //   grade,
-    // };
-    // this.closeModal();
-
     addStudent(newStudent);
-    // Optionally, you can reset the form fields here
-    // this.setState({
-    //   firstName: '',
-    //   lastName: '',
-    //   grade: '',
-    // });
     this.closeModal();
-
-
   };
 
   handleEditStudent = async (editedStudent) => {
     try {
-      console.log(editedStudent);
         await editStudent(editedStudent.id, editedStudent);
-        // this.handleGetStudents(); // Refresh the student list after editing
         this.closeModal();
       } catch (error) {
-        // Handle error, e.g., show an error message
         console.error('Error editing student:', error.message);
       }
   };
@@ -81,14 +65,18 @@ export class StudentList extends Component {
         await deleteStudent(studentId);
         this.handleGetStudents(); // Refresh the student list after deletion
       } catch (error) {
-        // Handle error, e.g., show an error message
         console.error('Error deleting student:', error.message);
       }
   };
 
+  handleItemClick = (studentId) => {
+    this.setState((prevState) => ({
+      expandedStudentId: prevState.expandedStudentId === studentId ? null : studentId,
+    }));
+  };
+
   render() {
     const { students, isModalOpen, selectedStudent } = this.state;
-
 
     return (
         <div className="student-list-container">
@@ -96,11 +84,26 @@ export class StudentList extends Component {
           <button onClick={this.openModal}>Add New Student</button>
           <ul className="student-list">
             {students.map((student) => (
-              <li key={student.id} className="student-item">
+            <li
+              key={student.id}
+              className={`student-item ${this.state.expandedStudentId === student.id ? 'expanded' : ''}`}
+              onClick={() => this.handleItemClick(student.id)}
+            >
                 <span className="student-name">
                   {student.firstName} {student.lastName}
                 </span>
                 <span className="student-grade">Grade: {student.grade}</span>
+
+                {this.state.expandedStudentId === student.id && (
+                  <div className="expanded-content">
+                    {/* Render the image or additional content here
+                    <img src={student.profilePictureUrl} alt={`Profile of ${student.firstName}`} /> */}
+                    <input
+                      type="file"
+                      accept="image/*"
+                    />
+                  </div>
+                )}
 
                 <button onClick={() => this.openEditModal(student)}>Edit</button>
                 <button onClick={() => this.handleDeleteStudent(student.id)}>Delete</button>

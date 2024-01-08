@@ -8,4 +8,5 @@ public interface IStudentService
     Task<IEnumerable<Student>> GetAllStudents();
     Task<Student?> GetStudentById(int studentId);
     Task UpdateStudent(int id, Student student);
+    Task UpdateUserProfilePicture(int studentId, IFormFile selectedProfilePicture);
 }

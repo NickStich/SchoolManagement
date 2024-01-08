@@ -10,5 +10,10 @@ public class Subject
 
     public string Name { get; set; }
 
-    public ICollection<StudentSubject> StudentSubjects { get; set; }
+    public int TeacherId { get; set; }
+    public virtual Teacher Teacher { get; set; }
+
+    public virtual ICollection<Student>? Students { get; set; }
+
+    public virtual ICollection<Mark>? Marks { get; set; }
 }

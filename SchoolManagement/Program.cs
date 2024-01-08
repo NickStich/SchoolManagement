@@ -17,7 +17,12 @@ builder.Services.AddDbContext<SchoolDbContext>(option =>
 
 //builder.Services.AddScoped<ICrudRepository<Student>, StudentRepository>();
 builder.Services.AddScoped<StudentRepository>();
+builder.Services.AddScoped<TeacherRepository>();
+builder.Services.AddScoped<SubjectRepository>();
 builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<ITeacherService, TeacherService>();
+builder.Services.AddScoped<ISubjectService, SubjectService>();
+builder.Services.AddScoped<FileService>();
 builder.Services.AddScoped<BlobStorageHelper>();
 
 builder.Services.ConfigureOptions<BlobStorageOptionsSetup>();

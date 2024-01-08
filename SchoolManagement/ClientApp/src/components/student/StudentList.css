@@ -14,10 +14,27 @@
   }
   
   .student-item {
-    margin-bottom: 10px;
     padding: 10px;
     border: 1px solid #ddd;
-    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .student-item:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .expanded {
+    width: 300px; /* Set the desired width for the expanded item */
+  }
+  
+  .expanded-content {
+    margin-top: 10px;
+  }
+  
+  .expanded-content img {
+    max-width: 100%;
+    height: auto;
   }
   
   .student-name {
