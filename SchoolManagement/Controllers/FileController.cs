@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SchoolManagement.BusinessLogic.Services;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SchoolManagement.Controllers;
 
@@ -32,22 +35,5 @@ public class FileController : ControllerBase
         {
             return StatusCode(500, $"Internal Server Error: {ex.Message}");
         }
-    }
-
-    [HttpGet]
-    public IEnumerable<WeatherForecast> Get()
-    {
-        string[] Summaries = new[]
-{
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
-
-        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        {
-            Date = DateTime.Now.AddDays(index),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-        })
-        .ToArray();
     }
 }

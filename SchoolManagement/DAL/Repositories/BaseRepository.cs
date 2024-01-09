@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SchoolManagement.Common.Exceptions;
 using SchoolManagement.DAL.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SchoolManagement.DAL.Repositories;
 

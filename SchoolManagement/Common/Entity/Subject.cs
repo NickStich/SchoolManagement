@@ -1,4 +1,5 @@
 ﻿using SchoolManagement.Common.Enum;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace SchoolManagement.Common.Entity;

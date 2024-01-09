@@ -1,4 +1,7 @@
-﻿namespace SchoolManagement.DAL.Interfaces;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace SchoolManagement.DAL.Interfaces;
 
 public interface ICrudRepository<TEntity>
 {

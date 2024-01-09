@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SchoolManagement.BusinessLogic.Interfaces;
 using SchoolManagement.Common.Entity;
+using System.Threading.Tasks;
 
 namespace SchoolManagement.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class SubjectController : ControllerBase
 {
     private readonly ISubjectService _subjectService;

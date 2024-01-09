@@ -1,4 +1,7 @@
-﻿using SchoolManagement.Common.Entity;
+﻿using Microsoft.AspNetCore.Http;
+using SchoolManagement.Common.Entity;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SchoolManagement.BusinessLogic.Interfaces;
 public interface IStudentService

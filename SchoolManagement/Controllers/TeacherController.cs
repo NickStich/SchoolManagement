@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using SchoolManagement.BusinessLogic.Interfaces;
 using SchoolManagement.Common.Entity;
+using System.Threading.Tasks;
 
 namespace SchoolManagement.Controllers;
 
@@ -16,6 +18,7 @@ public class TeacherController : ControllerBase
     }
 
     [HttpGet]
+    [Route("")]
     public async Task<IActionResult> GetAllTeachers()
     {
         var teachers = await _teacherService.GetAllTeachers();
@@ -37,6 +40,7 @@ public class TeacherController : ControllerBase
     public async Task<IActionResult> AddTeacher([FromBody] Teacher teacher)
     {
         await _teacherService.AddTeacher(teacher);
+
         return CreatedAtAction(nameof(GetTeacherById), new { id = teacher.Id }, teacher);
     }
 

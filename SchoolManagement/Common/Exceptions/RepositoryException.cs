@@ -1,4 +1,6 @@
-﻿namespace SchoolManagement.Common.Exceptions;
+﻿using System;
+
+namespace SchoolManagement.Common.Exceptions;
 
 public class RepositoryException : Exception
 {

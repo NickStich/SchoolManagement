@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using SchoolManagement.BusinessLogic.Interfaces;
 using SchoolManagement.BusinessLogic.Services;
 using SchoolManagement.Common.Entity;
@@ -27,7 +30,7 @@ builder.Services.AddScoped<BlobStorageHelper>();
 
 builder.Services.ConfigureOptions<BlobStorageOptionsSetup>();
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(x =>
@@ -47,15 +50,24 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+
+app.UseCors(builder => builder
+    .AllowAnyOrigin()
+    .AllowAnyHeader()
+    .AllowAnyMethod());
+
 app.UseRouting();
 
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    //app.MapControllerRoute(
+    //    name: "default",
+    //    pattern: "{controller}/{action=Index}/{id?}");
+});
 
 
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller}/{action=Index}/{id?}");
-
-app.MapFallbackToFile("index.html"); ;
+//app.MapFallbackToFile("index.html"); ;
 
 app.Run();

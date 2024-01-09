@@ -1,4 +1,6 @@
-﻿namespace SchoolManagement.Storage;
+﻿using System.IO;
+
+namespace SchoolManagement.Storage;
 
 public class File
 {
