@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SchoolManagement.BusinessLogic.Interfaces;
 using SchoolManagement.Common.Entity;
+using System;
 using System.Threading.Tasks;
 
 namespace SchoolManagement.Controllers;
@@ -69,5 +70,20 @@ public class StudentController : ControllerBase
         }
 
         return new OkObjectResult("It worked");
+    }
+
+    [HttpGet("{studentId}/marks")]
+    public async Task<IActionResult> GetStudentMarks(int studentId)
+    {
+        try
+        {
+            var marks = await _studentService.GetStudentMarksAsync(studentId);
+
+            return Ok(marks);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal Server Error: {ex.Message}");
+        }
     }
 }

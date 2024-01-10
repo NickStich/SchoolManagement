@@ -12,4 +12,5 @@ public interface IStudentService
     Task<Student?> GetStudentById(int studentId);
     Task UpdateStudent(int id, Student student);
     Task UpdateUserProfilePicture(int studentId, IFormFile selectedProfilePicture);
+    Task<IEnumerable<Mark>> GetStudentMarksAsync(int studentId);
 }

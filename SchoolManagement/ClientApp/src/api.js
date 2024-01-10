@@ -1,8 +1,11 @@
+const BASE_URL = 'https://localhost:7148'
+
+
 export const addStudent = async (student) => {
         const { firstName, lastName, grade } = student;
     
         try {
-          const response = await fetch('https://localhost:44412/student', {
+          const response = await fetch(`${BASE_URL}/student`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -28,7 +31,7 @@ export const addStudent = async (student) => {
 
 export const getStudents = async () => {
     try {
-        const response = await fetch(`https://localhost:44412/student`);
+        const response = await fetch(`${BASE_URL}/student`);
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -41,7 +44,7 @@ export const getStudents = async () => {
 
   export const editStudent = async (studentId, updatedData) => {
     try {
-      const response = await fetch(`https://localhost:44412/student/${studentId}`, {
+      const response = await fetch(`${BASE_URL}/student/${studentId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -65,7 +68,7 @@ export const getStudents = async () => {
 
   export const deleteStudent = async (studentId) => {
     try {
-      const response = await fetch(`https://localhost:44412/student/${studentId}`, {
+      const response = await fetch(`${BASE_URL}/student/${studentId}`, {
         method: 'DELETE',
       });
   

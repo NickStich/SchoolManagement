@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace SchoolManagement.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 public class SubjectController : ControllerBase
 {
     private readonly ISubjectService _subjectService;

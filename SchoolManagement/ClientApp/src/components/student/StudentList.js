@@ -19,10 +19,12 @@ export class StudentList extends Component {
   }
 
   componentDidMount() {
+    console.log('fsdfsd');
     this.handleGetStudents();
   }
 
   handleGetStudents = () => {
+    console.log('fsdfsdfsdf');
     getStudents()
       .then((data) => {
         this.setState({ students: data, isModalOpen: false, });

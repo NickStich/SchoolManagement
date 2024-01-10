@@ -90,4 +90,16 @@ public class StudentService : IStudentService
 
         await _studentRepository.UpdateAsync(student.Id, student);
     }
+
+    public async Task<IEnumerable<Mark>> GetStudentMarksAsync(int studentId)
+    {
+        try
+        {
+            return await _studentRepository.GetStudentMarksAsync(studentId);
+        }
+        catch
+        {
+            throw;
+        }
+    }
 }

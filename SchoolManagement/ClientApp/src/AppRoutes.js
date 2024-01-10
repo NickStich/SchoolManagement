@@ -17,12 +17,12 @@ const AppRoutes = [
         path: '/fetch-data',
         element: <FetchData />
     },
+    // {
+    //     path: '/student',
+    //     element: <AddStudentPage />
+    // },
     {
         path: '/student',
-        element: <AddStudentPage />
-    },
-    {
-        path: '/students',
         element: <StudentList />
     },
 

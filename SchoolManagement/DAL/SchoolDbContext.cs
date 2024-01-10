@@ -6,26 +6,15 @@ namespace SchoolManagement.DAL;
 
 public class SchoolDbContext : DbContext
 {
-    //public readonly string _connectionString;
 
-    //public SchoolDbContext()
-    //{
-    //    //_connectionString = @"Data Source=ROMOB41160\SQL2014;Initial Catalog=SchoolManagement;Integrated Security=True; Encrypt=False"; // connection string of the DB | better to store separate
-    //}
-
-    public SchoolDbContext(DbContextOptions<SchoolDbContext> options) : base(options)
+    public SchoolDbContext(DbContextOptions options) : base(options)
     {
-        //_connectionString = @"Data Source=ROMOB41160\SQL2014;Initial Catalog=SchoolManagement;Integrated Security=True; Encrypt=False"; // connection string of the DB | better to store separate
     }
 
-    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    //{
-    //    if (!optionsBuilder.IsConfigured)
-    //    {
-    //        // Use the "DefaultConnection" connection string from appsettings.json
-    //        optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-    //    }
-    //}
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+    }
 
     public DbSet<Student> Students { get; set; }
 
@@ -35,34 +24,62 @@ public class SchoolDbContext : DbContext
 
     public DbSet<Mark> Marks { get; set; }
 
+    public DbSet<StudentSubject> StudentSubjects { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Configure Student-Subject relationship
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<Student>()
-            .HasMany(s => s.Subjects)
-            .WithMany(s => s.Students)
-            .UsingEntity(j => j.ToTable("StudentSubjects"));
+            .HasMany(s => s.StudentSubjects)
+            .WithOne(ss => ss.Student)
+            .HasForeignKey(ss => ss.StudentId);
 
-        // Configure Subject-Teacher relationship
+        modelBuilder.Entity<Student>()
+            .HasMany(s => s.Marks)
+            .WithOne(m => m.Student)
+            .HasForeignKey(m => m.StudentId);
+
+        modelBuilder.Entity<Teacher>()
+            .HasMany(t => t.Subjects)
+            .WithOne(s => s.Teacher)
+            .HasForeignKey(s => s.TeacherId);
+
         modelBuilder.Entity<Subject>()
-            .HasOne(s => s.Teacher)
-            .WithMany(t => t.Subjects)
-            .HasForeignKey(s => s.TeacherId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .HasMany(s => s.StudentSubjects)
+            .WithOne(ss => ss.Subject)
+            .HasForeignKey(ss => ss.SubjectId);
 
-        // Configure Mark-Student and Mark-Subject relationships
+        modelBuilder.Entity<Subject>()
+            .HasMany(s => s.Marks)
+            .WithOne(m => m.Subject)
+            .HasForeignKey(m => m.SubjectId);
+
+        modelBuilder.Entity<StudentSubject>()
+            .HasKey(ss => ss.Id);
+
+        modelBuilder.Entity<StudentSubject>()
+            .HasOne(ss => ss.Student)
+            .WithMany(s => s.StudentSubjects)
+            .HasForeignKey(ss => ss.StudentId);
+
+        modelBuilder.Entity<StudentSubject>()
+            .HasOne(ss => ss.Subject)
+            .WithMany(s => s.StudentSubjects)
+            .HasForeignKey(ss => ss.SubjectId);
+
+        modelBuilder.Entity<Mark>()
+            .HasKey(m => m.Id);
+
         modelBuilder.Entity<Mark>()
             .HasOne(m => m.Student)
             .WithMany(s => s.Marks)
-            .HasForeignKey(m => m.StudentId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .HasForeignKey(m => m.StudentId);
 
         modelBuilder.Entity<Mark>()
             .HasOne(m => m.Subject)
             .WithMany(s => s.Marks)
-            .HasForeignKey(m => m.SubjectId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        base.OnModelCreating(modelBuilder);
+            .HasForeignKey(m => m.SubjectId);
     }
 }
+
