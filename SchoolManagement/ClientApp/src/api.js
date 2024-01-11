@@ -29,6 +29,21 @@ export const addStudent = async (student) => {
         }
 }
 
+export const getStudentById = async (studentId) => {
+  try {
+      const response = await fetch(`${BASE_URL}/student/${studentId}`);
+      if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const result = await response.json();
+      console.log(result);
+      return result;
+  } catch (error) {
+      console.error('Error fetching student data:', error);
+      throw error; // Rethrow the error for the calling code to handle
+  }
+};
+
 export const getStudents = async () => {
     try {
         const response = await fetch(`${BASE_URL}/student`);
@@ -85,6 +100,28 @@ export const getStudents = async () => {
     }
   };
 
+  export const uploadStudentProfilePicture = async (studentId, file) => {
+    try {
+      const formData = new FormData();
+      formData.append('selectedProfilePicture', file);
+  
+      const response = await fetch(`${BASE_URL}/student/uploadProfilePicture/${studentId}`, {
+        method: 'PUT',
+        body: formData,
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      console.log('Student profile picture added successfully');
+    } catch (error) {
+      // Handle error, e.g., show an error message
+      console.error('Error uploading student profile picture:', error.message);
+      throw error;
+    }
+  };
+
   export const getFileByName = async (fileName) => {
     try {
         const response = await fetch(`${BASE_URL}/file/${fileName}`);
@@ -93,7 +130,7 @@ export const getStudents = async () => {
         }
         return await response.blob();
     } catch (error) {
-        console.error('Error fetching student data:', error);
+        console.error('Error fetching file:', error);
         throw error; // Rethrow the error for the calling code to handle
     }
   };
