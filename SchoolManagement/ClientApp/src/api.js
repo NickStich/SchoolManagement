@@ -84,3 +84,16 @@ export const getStudents = async () => {
       throw error;
     }
   };
+
+  export const getFileByName = async (fileName) => {
+    try {
+        const response = await fetch(`${BASE_URL}/file/${fileName}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return await response.blob();
+    } catch (error) {
+        console.error('Error fetching student data:', error);
+        throw error; // Rethrow the error for the calling code to handle
+    }
+  };

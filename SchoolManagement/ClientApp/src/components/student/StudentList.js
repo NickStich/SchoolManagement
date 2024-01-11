@@ -1,8 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import AddStudentPage from './AddStudentPage.js';
 import './StudentList.css';
-import { getStudents, addStudent, editStudent, deleteStudent } from '../../api.js'
+import { getStudents, addStudent, editStudent, deleteStudent, getFileByName } from '../../api.js'
+
+import userImg from '../../assets/user.png'
 
 Modal.setAppElement('#root');
 
@@ -16,15 +18,16 @@ export class StudentList extends Component {
       selectedStudent: null,
       expandedStudentId: null,
     };
+
+    // Create a ref for the file input
+    this.fileInputRef = React.createRef();
   }
 
   componentDidMount() {
-    console.log('fsdfsd');
     this.handleGetStudents();
   }
 
   handleGetStudents = () => {
-    console.log('fsdfsdfsdf');
     getStudents()
       .then((data) => {
         this.setState({ students: data, isModalOpen: false, });
@@ -43,7 +46,6 @@ export class StudentList extends Component {
   };
 
   closeModal = () => {
-    console.log('THIS');
     this.handleGetStudents();
     this.setState({ isModalOpen: false });
   };
@@ -65,20 +67,58 @@ export class StudentList extends Component {
   handleDeleteStudent = async (studentId) => {
     try {
         await deleteStudent(studentId);
-        this.handleGetStudents(); // Refresh the student list after deletion
+        this.handleGetStudents(); 
       } catch (error) {
         console.error('Error deleting student:', error.message);
       }
   };
 
-  handleItemClick = (studentId) => {
-    this.setState((prevState) => ({
-      expandedStudentId: prevState.expandedStudentId === studentId ? null : studentId,
-    }));
+  handleItemClick = async (studentId) => {
+
+    const fileName = this.state.students.find(x => x.id === studentId)?.profilePictureFileName;
+
+    if(fileName){
+      this.getProfilePicture(studentId)
+      .then((expandedStudentImage) => {
+        this.setState(
+          (prevState) => ({
+            expandedStudentId: prevState.expandedStudentId === studentId ? null : studentId,
+            expandedStudentImage,
+          }),
+          () => {
+            // If the image is present, trigger the file input click event
+            if (this.state.expandedStudentImage) {
+              console.log(this.fileInputRef.current);
+              console.log('fsdfsdf');
+            }
+          });
+      })
+      .catch((error) => {
+        console.error('Error loading image:', error);
+      });
+    }
+    else {
+      this.setState((prevState) => ({
+        expandedStudentId: prevState.expandedStudentId === studentId ? null : studentId,
+        expandedStudentImage: userImg
+      }));
+    }
   };
 
+  getProfilePicture = async (studentId) => {
+    const fileName = this.state.students.find(x => x.id === studentId)?.profilePictureFileName;
+
+    try {
+      const blob = await getFileByName(fileName);
+      const result = URL.createObjectURL(blob);
+      return result;
+    } catch (error) {
+      console.error('Error loading image:', error);
+    }
+  }
+
   render() {
-    const { students, isModalOpen, selectedStudent } = this.state;
+    const { students, isModalOpen, selectedStudent, expandedStudentImage  } = this.state;
 
     return (
         <div className="student-list-container">
@@ -97,13 +137,23 @@ export class StudentList extends Component {
                 <span className="student-grade">Grade: {student.grade}</span>
 
                 {this.state.expandedStudentId === student.id && (
-                  <div className="expanded-content">
-                    {/* Render the image or additional content here
-                    <img src={student.profilePictureUrl} alt={`Profile of ${student.firstName}`} /> */}
+                  <div>
+                    <div className="expanded-content">
+                      <img src={expandedStudentImage || userImg} alt="My Image" />
+
+
+                    </div>
                     <input
                       type="file"
-                      accept="image/*"
+                      ref={this.fileInputRef}
+                      // style={{ display: 'none' }}
+                      onChange={(e) => {
+                        // Handle the file upload logic here
+                        console.log('File uploaded:', e.target.files[0]);
+                      }}
+
                     />
+
                   </div>
                 )}
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SchoolManagement.Common.Entity;
+using SchoolManagement.DAL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SchoolManagement.DAL.Repositories;
 
-public class SchoolRepository
+public class SchoolRepository : ISchoolRepository
 {
     private readonly SchoolDbContext _dbContext;
 
@@ -16,65 +17,93 @@ public class SchoolRepository
         _dbContext = dbContext;
     }
 
-    //public async Task LinkSubjectsToStudentAsync(int studentId, List<int> subjectIds)
-    //{
-    //    var student = await _dbContext.Students.FindAsync(studentId);
+    #region StudentSubject
 
-    //    if (student != null && subjectIds.Any())
-    //    {
-    //        student.Subjects ??= new List<Subject>();
+    public async Task LinkSubjectsToStudentAsync(int studentId, IEnumerable<int> subjectIds)
+    {
+        var student = await _dbContext.Students.FindAsync(studentId);
 
-    //        var subjectsToAdd = await _dbContext.Subjects.Where(s => subjectIds.Contains(s.Id)).ToListAsync();
+        var allSubjectsExist = subjectIds.All(id => _dbContext.Subjects.Any(s => s.Id == id));
 
-    //        foreach (var subject in subjectsToAdd)
-    //        {
-    //            student.Subjects.Add(subject);
-    //        }
+        var subjects = _dbContext.Subjects.Where(subject => subjectIds.Contains(subject.Id)).ToList();
 
-    //        await _dbContext.SaveChangesAsync();
-    //    }
-    //}
+        if (student != null && allSubjectsExist)
+        {
+            var studentSubjectList = subjects.Select(subject =>
+                new StudentSubject
+                {
+                    Student = student,
+                    StudentId = studentId,
+                    Subject = subject,
+                    SubjectId = subject.Id
+                })
+                .ToList();
+
+            _dbContext.StudentSubjects.AddRange(studentSubjectList);
+
+            await _dbContext.SaveChangesAsync();
+        }
+    }
+
+    public async Task UnlinkSubjectsFromStudentAsync(int studentId, int subjectId)
+    {
+        var student = await _dbContext.Students.FindAsync(studentId);
+
+        if (student == null)
+        {
+            return;
+        }
+
+        var studentSubjectsToRemove = _dbContext.StudentSubjects
+            .Where(ss => ss.StudentId == studentId && ss.SubjectId == subjectId)
+            .ToList();
+
+        if (studentSubjectsToRemove.Any())
+        {
+            _dbContext.StudentSubjects.RemoveRange(studentSubjectsToRemove);
+            await _dbContext.SaveChangesAsync();
+        }
+    }
+
+    #endregion
 
     #region Mark
 
-    //public async Task AddMarkForStudentSubjectAsync(int studentId, int subjectId, int value, DateTime date)
-    //{
-    //    var studentSubject = await _dbContext.Students
-    //        .Include(s => s.Subjects)
-    //        .Include(ss => ss.Marks)
-    //        .FirstOrDefaultAsync(ss => ss.StudentId == studentId && s.Id == subjectId);
+    public async Task AddMarkForStudentSubjectAsync(int studentId, int subjectId, int value, DateTime date)
+    {
+        var student = await _dbContext.Students.FindAsync(studentId);
+        var subject = await _dbContext.Subjects.FindAsync(subjectId);
 
-    //    if (studentSubject != null)
-    //    {
-    //        var mark = new Mark { Value = value, Date = date };
-    //        studentSubject.Marks ??= new List<Mark>();
-    //        studentSubject.Marks.Add(mark);
+        if (student != null && subject != null)
+        {
+            var mark = new Mark { Value = value, Date = date, Student = student, Subject = subject };
+            _dbContext.Marks.AddRange(mark);
 
-    //        await _dbContext.SaveChangesAsync();
-    //    }
-    //}
+            await _dbContext.SaveChangesAsync();
+        }
+    }
 
-    //public async Task<IEnumerable<Mark>> GetMarksBetweenDatesAsync(int studentId, int subjectId, DateTime startDate, DateTime endDate)
-    //{
-    //    return await _dbContext.Marks
-    //        .Where(mark =>
-    //            mark.StudentSubject.StudentId == studentId &&
-    //            mark.StudentSubject.SubjectId == subjectId &&
-    //            mark.Date >= startDate && mark.Date <= endDate)
-    //        .ToListAsync();
-    //}
+    public async Task<IEnumerable<Mark>> GetMarksBetweenDatesAsync(int studentId, int subjectId, DateTime startDate, DateTime endDate)
+    {
+        return await _dbContext.Marks
+            .Where(mark =>
+                mark.StudentId == studentId &&
+                mark.SubjectId == subjectId &&
+                mark.Date >= startDate && mark.Date <= endDate)
+            .ToListAsync();
+    }
 
-    public async Task<bool> UpdateMarkAsync(int markId, int newValue, DateTime newDate)
+    public async Task<bool> UpdateMarkAsync(int markId, int newValue)
     {
         var mark = await _dbContext.Marks.FindAsync(markId);
 
         if (mark == null)
         {
-            return false; 
+            return false;
         }
 
         mark.Value = newValue;
-        mark.Date = newDate;
+        mark.Date = DateTime.Now;
 
         await _dbContext.SaveChangesAsync();
 
