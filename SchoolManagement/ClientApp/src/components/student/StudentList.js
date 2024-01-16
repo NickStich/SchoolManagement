@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { Component } from 'react';
 import Modal from 'react-modal';
 import AddStudentPage from './AddStudentPage.js';
 import './StudentList.css';
@@ -195,7 +195,7 @@ export class StudentList extends Component {
               {this.state.expandedStudentId === student.id && (
                 <div>
                   <div className="expanded-content">
-                    <img src={expandedStudentImage || userImg} alt="My Image" />
+                    <img src={expandedStudentImage || userImg} />
                   </div>
                   <input
                     type="file"

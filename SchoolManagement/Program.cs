@@ -34,7 +34,7 @@ builder.Services.AddScoped<ISubjectService, SubjectService>();
 builder.Services.AddScoped<FileService>();
 builder.Services.AddScoped<BlobStorageHelper>();
 
-builder.Services.ConfigureOptions<BlobStorageOptionsSetup>();
+builder.Services.ConfigureOptions<BlobSettings>();
 
 builder.Services.AddControllers();
 

@@ -4,7 +4,7 @@ using SchoolManagement.Storage;
 
 namespace SchoolManagement.Helpers;
 
-public class BlobStorageOptionsSetup : IConfigureOptions<BlobSettings>
+public class BlobStorageOptionsSetup : IOptions<BlobSettings>
 {
     private const string SectionName = "BlobSettings";
 
@@ -14,6 +14,8 @@ public class BlobStorageOptionsSetup : IConfigureOptions<BlobSettings>
     {
         _configuration = configuration;
     }
+
+    public BlobSettings Value => throw new System.NotImplementedException();
 
     public void Configure(BlobSettings options)
     {

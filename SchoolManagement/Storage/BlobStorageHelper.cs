@@ -25,7 +25,7 @@ public class BlobStorageHelper
 
             StreamReader streamReader = new(file.OpenReadStream());
 
-            await blob.UploadFromStreamAsync(streamReader.BaseStream);
+            await blob.UploadFromStreamAsync(streamReader.BaseStream); //refactor - not read the stream
 
             return file.FileName;
         }
